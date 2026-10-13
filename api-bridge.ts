@@ -52,6 +52,14 @@ class McpBridgeService {
       const transport = new StdioClientTransport({
         command: process.execPath,
         args: [tsxCli, "server.ts"],
+        env: {
+          ...(process.env as Record<string, string>),
+          PGHOST: process.env.PGHOST || "postgres",
+          PGPORT: process.env.PGPORT || "5432",
+          PGDATABASE: process.env.PGDATABASE || "sanjivani_sugar",
+          PGUSER: process.env.PGUSER || "postgres",
+          PGPASSWORD: process.env.PGPASSWORD || "postgres",
+        },
       });
 
       await client.connect(transport);

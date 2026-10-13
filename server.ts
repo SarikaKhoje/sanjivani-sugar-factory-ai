@@ -5,7 +5,17 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { Pool } from "pg";
 import { z } from "zod";
 
-const pool = new Pool();
+const pool = new Pool({
+  host: process.env.PGHOST || (process.env.NODE_ENV === "production" ? "postgres" : "localhost"),
+  port: parseInt(process.env.PGPORT || "5432", 10),
+  database: process.env.PGDATABASE || "sanjivani_sugar",
+  user: process.env.PGUSER || "postgres",
+  password: process.env.PGPASSWORD || "postgres",
+});
+
+pool.on("error", (err) => {
+  console.error("[PostgreSQL Pool Error]:", err.message);
+});
 
 const server = new McpServer({
   name: "sanjivani-farmer-server",
@@ -62,7 +72,7 @@ server.registerTool(
         content: [
           {
             type: "text",
-            text: "Unable to retrieve farmer information from PostgreSQL.",
+            text: `Unable to retrieve farmer information from PostgreSQL: ${error instanceof Error ? error.message : String(error)}`,
           },
         ],
       };

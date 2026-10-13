@@ -68,46 +68,48 @@ export const SugarcaneSupplyChart: React.FC<SugarcaneSupplyChartProps> = ({ farm
         </div>
       </div>
 
-      <div className="w-full h-72">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={chartData}
-            margin={{ top: 10, right: 10, left: -15, bottom: 20 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis
-              dataKey="name"
-              stroke="#64748b"
-              fontSize={11}
-              tickLine={false}
-              axisLine={{ stroke: '#e2e8f0' }}
-              interval={0}
-              angle={-25}
-              textAnchor="end"
-            />
-            <YAxis
-              stroke="#64748b"
-              fontSize={11}
-              tickLine={false}
-              axisLine={{ stroke: '#e2e8f0' }}
-              tickFormatter={(v) => `${v}T`}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Bar
-              dataKey="tonnes"
-              radius={[6, 6, 0, 0]}
-              animationDuration={800}
+      <div className="w-full overflow-x-auto pb-1">
+        <div className="min-w-[480px] sm:min-w-full h-72">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              margin={{ top: 10, right: 10, left: -15, bottom: 20 }}
             >
-              {chartData.map((_entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={index === 0 ? '#14532D' : '#166534'}
-                  className="hover:fill-forest-600 transition-colors cursor-pointer"
-                />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis
+                dataKey="name"
+                stroke="#64748b"
+                fontSize={11}
+                tickLine={false}
+                axisLine={{ stroke: '#e2e8f0' }}
+                interval={0}
+                angle={-25}
+                textAnchor="end"
+              />
+              <YAxis
+                stroke="#64748b"
+                fontSize={11}
+                tickLine={false}
+                axisLine={{ stroke: '#e2e8f0' }}
+                tickFormatter={(v) => `${v}T`}
+              />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar
+                dataKey="tonnes"
+                radius={[6, 6, 0, 0]}
+                animationDuration={800}
+              >
+                {chartData.map((_entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={index === 0 ? '#14532D' : '#166534'}
+                    className="hover:fill-forest-600 transition-colors cursor-pointer"
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

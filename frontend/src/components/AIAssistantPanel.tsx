@@ -216,7 +216,7 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-card flex flex-col h-[700px] overflow-hidden">
+    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-card flex flex-col h-[calc(100vh-13rem)] min-h-[500px] max-h-[760px] overflow-hidden">
       {/* Top Header */}
       <div className="p-4 px-5 border-b border-slate-100 bg-[#0F3822] text-white flex items-center justify-between">
         <div className="flex items-center gap-3">

@@ -9,6 +9,8 @@ import {
   RefreshCw,
   AlertTriangle,
   Factory,
+  LayoutDashboard,
+  Settings as SettingsIcon,
 } from 'lucide-react';
 import { ActiveTab, FarmerRecord, DashboardSummary, VillageData } from './types/farmer';
 import { fetchFarmers } from './services/api';
@@ -126,7 +128,7 @@ export const App: React.FC = () => {
         )}
 
         {/* Tab Content Body */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+        <main className="flex-1 p-3 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6 pb-24 lg:pb-8">
           {/* TAB 1: DASHBOARD */}
           {activeTab === 'dashboard' && (
             <div className="space-y-6 animate-in fade-in duration-200">
@@ -398,6 +400,89 @@ export const App: React.FC = () => {
         onClose={() => setSelectedFarmer(null)}
         onAskAIAboutFarmer={handleAskAIAboutFarmer}
       />
+
+      {/* Mobile Bottom Navigation Bar (visible only on mobile/tablet < lg screens) */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-1.5 px-2 flex items-center justify-around shadow-elevated">
+        <button
+          onClick={() => setActiveTab('dashboard')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] sm:text-xs font-medium transition-all ${
+            activeTab === 'dashboard'
+              ? 'text-forest-900 font-bold'
+              : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <div className={`p-1.5 rounded-xl ${activeTab === 'dashboard' ? 'bg-forest-100 text-forest-900' : ''}`}>
+            <LayoutDashboard className="w-4 h-4 sm:w-5 sm:h-5" />
+          </div>
+          <span>Dashboard</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('farmers')}
+          className={`relative flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] sm:text-xs font-medium transition-all ${
+            activeTab === 'farmers'
+              ? 'text-forest-900 font-bold'
+              : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <div className={`p-1.5 rounded-xl ${activeTab === 'farmers' ? 'bg-forest-100 text-forest-900' : ''}`}>
+            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+          </div>
+          <span>Farmers</span>
+          {summary && (
+            <span className="absolute top-1 right-2 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+          )}
+        </button>
+
+        <button
+          onClick={() => setActiveTab('payments')}
+          className={`relative flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] sm:text-xs font-medium transition-all ${
+            activeTab === 'payments'
+              ? 'text-forest-900 font-bold'
+              : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <div className={`p-1.5 rounded-xl ${activeTab === 'payments' ? 'bg-forest-100 text-forest-900' : ''}`}>
+            <IndianRupee className="w-4 h-4 sm:w-5 sm:h-5" />
+          </div>
+          <span>Payments</span>
+          {summary && summary.pendingPaymentCount > 0 && (
+            <span className="absolute top-1 right-2 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white"></span>
+          )}
+        </button>
+
+        <button
+          onClick={() => setActiveTab('ai-assistant')}
+          className={`relative flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] sm:text-xs font-medium transition-all ${
+            activeTab === 'ai-assistant'
+              ? 'text-forest-900 font-bold'
+              : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <div className={`p-1.5 rounded-xl ${activeTab === 'ai-assistant' ? 'bg-forest-900 text-lime-400' : 'text-slate-600'}`}>
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+          </div>
+          <span>AI Chat</span>
+          <span className="absolute top-1 right-2 flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-lime-500"></span>
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('settings')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-[10px] sm:text-xs font-medium transition-all ${
+            activeTab === 'settings'
+              ? 'text-forest-900 font-bold'
+              : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <div className={`p-1.5 rounded-xl ${activeTab === 'settings' ? 'bg-forest-100 text-forest-900' : ''}`}>
+            <SettingsIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+          </div>
+          <span>Settings</span>
+        </button>
+      </nav>
     </div>
   );
 };

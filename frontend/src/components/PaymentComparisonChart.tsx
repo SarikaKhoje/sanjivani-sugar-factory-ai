@@ -77,58 +77,60 @@ export const PaymentComparisonChart: React.FC<PaymentComparisonChartProps> = ({
         </div>
       </div>
 
-      <div className="w-full h-72">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={chartData}
-            margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis
-              dataKey="name"
-              stroke="#64748b"
-              fontSize={11}
-              tickLine={false}
-              axisLine={{ stroke: '#e2e8f0' }}
-              interval={0}
-              angle={-25}
-              textAnchor="end"
-            />
-            <YAxis
-              stroke="#64748b"
-              fontSize={11}
-              tickLine={false}
-              axisLine={{ stroke: '#e2e8f0' }}
-              tickFormatter={(v) => `₹${v / 1000}k`}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend
-              verticalAlign="top"
-              align="right"
-              iconType="circle"
-              wrapperStyle={{ paddingBottom: '12px', fontSize: '12px' }}
-              formatter={(value) => (
-                <span className="text-xs text-slate-600 font-medium">
-                  {value === 'amountPaid' ? 'Amount Paid (₹)' : 'Pending Payment (₹)'}
-                </span>
-              )}
-            />
-            <Bar
-              dataKey="amountPaid"
-              name="amountPaid"
-              fill="#16A34A"
-              radius={[4, 4, 0, 0]}
-              animationDuration={800}
-            />
-            <Bar
-              dataKey="pendingPayment"
-              name="pendingPayment"
-              fill="#D97706"
-              radius={[4, 4, 0, 0]}
-              animationDuration={800}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+      <div className="w-full overflow-x-auto pb-1">
+        <div className="min-w-[520px] sm:min-w-full h-72">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis
+                dataKey="name"
+                stroke="#64748b"
+                fontSize={11}
+                tickLine={false}
+                axisLine={{ stroke: '#e2e8f0' }}
+                interval={0}
+                angle={-25}
+                textAnchor="end"
+              />
+              <YAxis
+                stroke="#64748b"
+                fontSize={11}
+                tickLine={false}
+                axisLine={{ stroke: '#e2e8f0' }}
+                tickFormatter={(v) => `₹${v / 1000}k`}
+              />
+              <Tooltip content={<CustomTooltip />} />
+              <Legend
+                verticalAlign="top"
+                align="right"
+                iconType="circle"
+                wrapperStyle={{ paddingBottom: '12px', fontSize: '12px' }}
+                formatter={(value) => (
+                  <span className="text-xs text-slate-600 font-medium">
+                    {value === 'amountPaid' ? 'Amount Paid (₹)' : 'Pending Payment (₹)'}
+                  </span>
+                )}
+              />
+              <Bar
+                dataKey="amountPaid"
+                name="amountPaid"
+                fill="#16A34A"
+                radius={[4, 4, 0, 0]}
+                animationDuration={800}
+              />
+              <Bar
+                dataKey="pendingPayment"
+                name="pendingPayment"
+                fill="#D97706"
+                radius={[4, 4, 0, 0]}
+                animationDuration={800}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

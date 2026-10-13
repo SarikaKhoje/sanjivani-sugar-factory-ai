@@ -51,7 +51,7 @@ export const NotificationPopover: React.FC<NotificationPopoverProps> = ({
   ];
 
   return (
-    <div className="absolute right-0 top-12 z-50 w-80 sm:w-96 bg-white rounded-2xl shadow-elevated border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+    <div className="absolute right-0 top-12 z-50 w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-white rounded-2xl shadow-elevated border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
       <div className="p-3.5 bg-forest-900 text-white flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Bell className="w-4 h-4 text-lime-400" />

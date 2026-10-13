@@ -306,11 +306,12 @@ const frontendDistPath = join(process.cwd(), "frontend", "dist");
 if (existsSync(frontendDistPath)) {
   console.log(`[API Bridge] Serving frontend production build from: ${frontendDistPath}`);
   app.use(express.static(frontendDistPath));
-  app.get("*", (req, res, next) => {
-    if (req.path.startsWith("/api")) {
-      return next();
+  // Express 5 compatible catch-all fallback for client-side routing
+  app.use((req, res, next) => {
+    if (req.method === "GET" && !req.path.startsWith("/api")) {
+      return res.sendFile(join(frontendDistPath, "index.html"));
     }
-    res.sendFile(join(frontendDistPath, "index.html"));
+    next();
   });
 }
 

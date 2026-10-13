@@ -229,3 +229,103 @@ Open your browser and navigate to: **`http://localhost:5173`**
 - All database connections and OpenAI API calls occur strictly within the Node.js backend.
 - Neither PostgreSQL passwords nor OpenAI API keys are exposed to the client bundle or Vite variables.
 - All frontend calls route through `http://localhost:5000/api` via Vite's secure proxy.
+
+---
+
+## ☁️ Deploying to AWS (Amazon Web Services)
+
+The easiest, most cost-effective method to deploy this project on AWS is using an **AWS EC2 Ubuntu (Free Tier)** instance with **Docker Compose**.
+
+### Method 1: One-Command Deployment with Docker Compose (Recommended)
+
+#### 1. Launch an EC2 Instance on AWS Console
+1. Go to **AWS Console** -> **EC2** -> **Launch Instance**.
+2. **Name**: `sanjivani-ai-server`.
+3. **AMI**: Ubuntu Server 24.04 LTS (Free Tier eligible).
+4. **Instance type**: `t2.micro` or `t3.micro` (Free tier).
+5. **Key pair**: Create or select an existing `.pem` key pair to SSH.
+6. **Network / Security Group**: Check the boxes for:
+   - ✅ Allow SSH traffic from anywhere (Port 22)
+   - ✅ Allow HTTP traffic from the internet (Port 80)
+   - ✅ Allow HTTPS traffic from the internet (Port 443)
+7. Click **Launch Instance**.
+
+#### 2. Connect to your EC2 Instance
+Open your terminal (PowerShell or Bash) and SSH into your server:
+```bash
+ssh -i "your-key.pem" ubuntu@YOUR_EC2_PUBLIC_IP
+```
+
+#### 3. Install Docker & Git on EC2
+Run on the server:
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y git docker.io docker-compose-v2
+sudo usermod -aG docker ubuntu
+newgrp docker
+```
+
+#### 4. Clone Your GitHub Repository
+```bash
+git clone https://github.com/SarikaKhoje/sanjivani-sugar-factory-ai.git
+cd sanjivani-sugar-factory-ai
+```
+
+#### 5. Configure Your Production Environment Variables
+Create your production `.env` file:
+```bash
+cp .env.example .env
+nano .env
+```
+Add your real `OPENAI_API_KEY` and save (`Ctrl+O`, `Enter`, `Ctrl+X`):
+```env
+PORT=5000
+OPENAI_API_KEY=sk-proj-YOUR_ACTUAL_OPENAI_KEY
+OPENAI_MODEL=gpt-4.1-mini
+PGDATABASE=sanjivani_sugar
+PGUSER=postgres
+PGPASSWORD=your_secure_password_here
+```
+
+#### 6. Start the Entire System
+```bash
+docker compose up -d --build
+```
+
+**That's it!** Docker will:
+- Start PostgreSQL and automatically seed all 10 sample farmer records from `database.sql`.
+- Build the optimized React frontend.
+- Launch the Express HTTP API Bridge and MCP Server on Port 80.
+
+Visit your EC2 public IP address in any browser:
+👉 **`http://YOUR_EC2_PUBLIC_IP`**
+
+---
+
+### Method 2: Native Deployment (Without Docker using PM2)
+
+If you prefer running services directly on the Ubuntu server without Docker:
+
+```bash
+# 1. Install Node.js 20 & PostgreSQL
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs postgresql postgresql-contrib
+
+# 2. Setup PostgreSQL database
+sudo -u postgres psql -c "CREATE DATABASE sanjivani_sugar;"
+sudo -u postgres psql -d sanjivani_sugar -f database.sql
+sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'your_password';"
+
+# 3. Clone and build project
+git clone https://github.com/SarikaKhoje/sanjivani-sugar-factory-ai.git
+cd sanjivani-sugar-factory-ai
+npm install
+npm run build
+
+# 4. Start production process with PM2
+sudo npm install -g pm2 tsx
+PORT=80 pm2 start "npx tsx api-bridge.ts" --name "sanjivani-ai"
+pm2 save
+pm2 startup
+```
+

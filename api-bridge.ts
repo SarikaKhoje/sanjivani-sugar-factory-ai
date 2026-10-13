@@ -5,6 +5,7 @@ import OpenAI from "openai";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { join } from "node:path";
+import { existsSync } from "node:fs";
 import { Pool } from "pg";
 
 const app = express();
@@ -299,6 +300,19 @@ app.post("/api/ask", async (req, res) => {
     });
   }
 });
+
+// Serve compiled React frontend in production if dist exists
+const frontendDistPath = join(process.cwd(), "frontend", "dist");
+if (existsSync(frontendDistPath)) {
+  console.log(`[API Bridge] Serving frontend production build from: ${frontendDistPath}`);
+  app.use(express.static(frontendDistPath));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) {
+      return next();
+    }
+    res.sendFile(join(frontendDistPath, "index.html"));
+  });
+}
 
 const serverInstance = app.listen(PORT, () => {
   console.log(`=======================================================`);

@@ -1,0 +1,46 @@
+services:
+  # PostgreSQL Database Service
+  postgres:
+    image: postgres:16-alpine
+    container_name: sanjivani-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${PGDATABASE:-sanjivani_sugar}
+      POSTGRES_USER: ${PGUSER:-postgres}
+      POSTGRES_PASSWORD: ${PGPASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER:-postgres} -d ${PGDATABASE:-sanjivani_sugar}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Sanjivani AI - Node.js HTTP Bridge, MCP Server, & Frontend UI
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sanjivani-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 5000
+      PGHOST: postgres
+      PGPORT: 5432
+      PGDATABASE: ${PGDATABASE:-sanjivani_sugar}
+      PGUSER: ${PGUSER:-postgres}
+      PGPASSWORD: ${PGPASSWORD:-postgres}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
+    ports:
+      - "80:5000"
+      - "5000:5000"
+
+volumes:
+  pgdata:

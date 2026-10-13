@@ -21,7 +21,7 @@ ENV PORT=5000
 
 # Install backend dependencies
 COPY package*.json ./
-RUN npm ci --omit=dev && npm install -g tsx
+RUN npm ci && npm install -g tsx
 
 # Copy backend source files
 COPY server.ts ./

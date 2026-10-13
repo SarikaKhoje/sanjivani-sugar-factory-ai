@@ -6,6 +6,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { join } from "node:path";
 import { existsSync } from "node:fs";
+import { createRequire } from "node:module";
 import { Pool } from "pg";
 
 const app = express();
@@ -39,12 +40,18 @@ class McpBridgeService {
         version: "1.0.0",
       });
 
+      let tsxCli = join(process.cwd(), "node_modules", "tsx", "dist", "cli.mjs");
+      try {
+        const req = createRequire(import.meta.url);
+        tsxCli = req.resolve("tsx/cli");
+      } catch (err) {
+        console.warn("[MCP Bridge] Using fallback tsx CLI path:", tsxCli);
+      }
+
+      console.log(`[MCP Bridge] Spawning MCP Server with tsx CLI: ${tsxCli}`);
       const transport = new StdioClientTransport({
         command: process.execPath,
-        args: [
-          join(process.cwd(), "node_modules", "tsx", "dist", "cli.mjs"),
-          "server.ts",
-        ],
+        args: [tsxCli, "server.ts"],
       });
 
       await client.connect(transport);

@@ -24,6 +24,7 @@
     "express": "^5.3.0",
     "openai": "^7.32.0",
     "pg": "^8.23.1",
+    "tsx": "^4.23.15",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -31,7 +32,6 @@
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.5",
     "@types/pg": "^8.23.1",
-    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
 }
